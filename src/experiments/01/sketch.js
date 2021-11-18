@@ -22,7 +22,7 @@ function setup() {
 
   if(showArtboard){
     noStroke()
-    fill(240,240,240)
+    fill(230,230,230)
     rect(
       canvasPaddingH,
       canvasPaddingV,
