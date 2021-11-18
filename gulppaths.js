@@ -1,9 +1,10 @@
 module.exports = {
   src: {
     base: 'src',
-    markup: 'src/*.{html,htm,php,md}',
+    markup: 'src/**/*.{html,htm,php,md,js}',
     htaccess: 'src/.htaccess',
     scripts: 'src/assets/js/**/*.js',
+    vendor: ['node_modules/p5/lib/p5.min.js', 'node_modules/p5.pattern/p5.pattern.js'],
     styles: 'src/assets/scss/**/*.scss',
     fonts: 'src/assets/fonts/**/*.{otf,ttf,svg,eot,woff,woff2}',
     images: 'src/assets/images/**/*.{jpg,png,gif,jpeg,svg}',

@@ -73,6 +73,29 @@ gulp.task('main:markup', function () {
 })
 
 
+// VENDOR SCRIPTS
+gulp.task('main:vendor', function () {
+  if (isProduction) {
+    return gulp
+      .src(paths.src.vendor)
+      .pipe(plumber())
+      .pipe(sourcemaps.init())
+        .pipe(uglify())
+        .pipe(concat('vendor.min.js'))
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest(paths.dist.scripts))
+  } else {
+    return gulp
+      .src(paths.src.vendor)
+      .pipe(sourcemaps.init())
+        .pipe(plumber())
+        .pipe(concat('vendor.min.js'))
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest(paths.dev.scripts))
+  }
+})
+
+
 // SCRIPTS
 gulp.task('main:scripts', function () {
   if (isProduction) {
@@ -217,6 +240,7 @@ var generator =
     'main:clean',
     gulp.parallel(
       'main:markup',
+      'main:vendor',
       'main:scripts',
       'main:htaccess'
     ),
@@ -230,7 +254,8 @@ if (isProduction) {
       'main:clean',
       gulp.parallel(
         'main:markup',
-        'main:scripts', 
+        'main:vendor',
+        'main:scripts',
         'main:htaccess',
         'main:createFiles'
       ),
