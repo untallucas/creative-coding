@@ -29,23 +29,12 @@ const del = require('del')
 const browserSync = require('browser-sync').create()
 const flags = require('minimist')(process.argv.slice(1))
 const chalk = require('chalk')
-const changed = require('gulp-changed')
 const concat = require('gulp-concat')
 const file = require('gulp-file')
 const plumber = require('gulp-plumber')
-const rename = require('gulp-rename')
 const replace = require('gulp-replace')
 const sourcemaps = require('gulp-sourcemaps')
 const uglify = require('gulp-uglify')
-
-const imagemin = require('gulp-imagemin')
-const resize = require('gulp-images-resizer')
-const ico = require('gulp-to-ico')
-
-const prefix = require('gulp-autoprefixer')
-const cleanCSS = require('gulp-clean-css')
-const sass = require('gulp-sass')
-sass.compiler = require('node-sass')
 
 
 // GET ENVIRONMENT FLAG
@@ -84,34 +73,6 @@ gulp.task('main:markup', function () {
 })
 
 
-// STYLES
-gulp.task('main:styles', function () {
-  if (isProduction) {
-    return gulp
-      .src(paths.src.styles)
-      .pipe(plumber())
-      .pipe(sourcemaps.init())
-        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-        .pipe(concat('styles.css'))
-        .pipe(cleanCSS())
-        .pipe(prefix())
-        .pipe(rename('styles.min.css'))
-      .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest(paths.dist.styles))
-  } else {
-    return gulp
-      .src(paths.src.styles)
-      .pipe(plumber())
-      .pipe(sourcemaps.init())
-        .pipe(sass().on('error', sass.logError))
-        .pipe(concat('styles.css'))
-        .pipe(rename('styles.min.css'))
-      .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest(paths.dev.styles))
-  }
-})
-
-
 // SCRIPTS
 gulp.task('main:scripts', function () {
   if (isProduction) {
@@ -132,66 +93,6 @@ gulp.task('main:scripts', function () {
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest(paths.dev.scripts))
   }
-})
-
-
-// IMAGES
-gulp.task('main:images', function () {
-  if (isProduction) {
-    return gulp
-      .src(paths.src.images)
-      .pipe(plumber())
-      .pipe(changed(paths.dist.images))
-      .pipe(imagemin([
-        imagemin.gifsicle({ interlaced: true }),
-        imagemin.mozjpeg({ quality: 75, progressive: true }),
-        imagemin.optipng({ optimizationLevel: 5 }),
-        imagemin.svgo({ 
-          plugins: [
-            { removeViewBox: true },
-            { cleanupIDs: false }
-          ] 
-        })
-      ]))
-      .pipe(gulp.dest(paths.dist.images))
-  } else {
-    return gulp
-      .src(paths.src.images)
-      .pipe(plumber())
-      .pipe(gulp.dest(paths.dev.images))
-  }
-})
-
-
-// SOCIAL
-gulp.task('main:social', function () {
-  return gulp
-    .src(paths.src.social)
-    .pipe(plumber())
-    .pipe(imagemin([
-      imagemin.mozjpeg({ quality: 75, progressive: true })
-    ]))
-    .pipe(gulp.dest(paths.dist.base))
-})
-
-
-// FONTS
-gulp.task('main:fonts', function () {
-  var targetFolder = isProduction ? paths.dist.fonts : paths.dev.fonts
-  return gulp
-    .src(paths.src.fonts)
-    .pipe(plumber())
-    .pipe(gulp.dest(targetFolder))
-})
-
-
-// DOCS
-gulp.task('main:docs', function () {
-  var targetFolder = isProduction ? paths.dist.docs : paths.dev.docs
-  return gulp
-    .src(paths.src.docs)
-    .pipe(plumber())
-    .pipe(gulp.dest(targetFolder))
 })
 
 
@@ -253,67 +154,6 @@ gulp.task('create:readmeMd', function () {
 gulp.task('main:createFiles', gulp.series('create:robotsTxt', 'create:humansTxt', 'create:readmeMd'))
 
 
-// FAVICONS
-gulp.task('icons:png', async function () {
-  var iconVariants = [
-    { size: 64, filename: 'favicon' },
-    { size: 180, filename: 'apple-touch-icon' },
-    { size: 192, filename: 'icon-192' },
-    { size: 512, filename: 'icon-512' }
-  ]
-  return iconVariants.forEach(function (icons) {
-    gulp.src(paths.src.icons + 'favicon.png')
-      .pipe(resize({
-        width: icons.size,
-        height: icons.size,
-        format: '.png'
-      }))
-      .pipe(imagemin([
-        imagemin.optipng({ optimizationLevel: 5 }),
-      ]))
-      .pipe(rename(function (path) {
-        path.dirname = ''
-        path.basename = icons.filename
-        path.extname = '.png'
-      }))
-      .pipe(gulp.dest(paths.dist.base))
-  })
-})
-
-gulp.task('icons:ico', function () {
-  return gulp
-    .src(paths.src.icons + 'favicon.png')
-    .pipe(ico('favicon.ico', { resize: true, sizes: [16, 24, 32, 64, 128, 256] }))
-    .pipe(gulp.dest(paths.dist.base))
-})
-
-gulp.task('icons:svg', function () {
-  return gulp
-    .src(paths.src.icons + 'favicon.svg')
-    .pipe(plumber())
-    .pipe(imagemin([
-      imagemin.svgo({ 
-        plugins: [
-          { removeViewBox: true },
-          { cleanupIDs: false }
-        ] 
-      })
-    ]))
-    .pipe(gulp.dest(paths.dist.base))
-})
-
-gulp.task('icons:manifest', function () {
-  return gulp
-    .src(paths.src.icons + 'manifest.json')
-    .pipe(plumber())
-    .pipe(replace('##appName##', appName))
-    .pipe(replace('##appColor##', appColor))
-    .pipe(gulp.dest(paths.dist.base))
-})
-
-gulp.task('main:favicons', gulp.series('icons:png', 'icons:ico', 'icons:svg', 'icons:manifest'))
-
-
 // RESET
 gulp.task('reset', function () {
   return del([paths.dist.base, paths.dev.base])
@@ -337,14 +177,8 @@ gulp.task('report', function (done) {
     ) +
     chalk.gray(
       '✅ Markup files copied' + '\n' +
-      '✅ Styles minified and optimized' + '\n' +
       '✅ Scripts compiled and minified' + '\n' +
-      '✅ Images copied and compressed' + '\n' +
-      '✅ Social share assets copied' + '\n' +
-      '✅ Font files copied' + '\n' +
-      '✅ Documents files copied' + '\n' +
       '✅ Htaccess file created' + '\n' +
-      '✅ Favicons and identity assets created' + '\n' +
       '✅ Humans, robots and other files created' + '\n'
     ) +
     chalk.green.bold(
@@ -373,11 +207,7 @@ gulp.task('serve', function (done) {
 // WATCH
 gulp.task('watch', function () {
   gulp.watch(paths.src.markup, gulp.series('main:markup', 'reload'))
-  gulp.watch(paths.src.styles, gulp.series('main:styles', 'reload'))
   gulp.watch(paths.src.scripts, gulp.series('main:scripts', 'reload'))
-  gulp.watch(paths.src.images, gulp.series('main:images', 'reload'))
-  gulp.watch(paths.src.fonts, gulp.series('main:fonts', 'reload'))
-  gulp.watch(paths.src.docs, gulp.series('main:docs', 'reload'))
 })
 
 
@@ -387,11 +217,7 @@ var generator =
     'main:clean',
     gulp.parallel(
       'main:markup',
-      'main:styles',
       'main:scripts',
-      'main:images',
-      'main:fonts',
-      'main:docs',
       'main:htaccess'
     ),
     'serve',
@@ -403,15 +229,9 @@ if (isProduction) {
     gulp.series(
       'main:clean',
       gulp.parallel(
-        'main:markup', 
-        'main:styles', 
+        'main:markup',
         'main:scripts', 
-        'main:images', 
-        'main:social', 
-        'main:fonts', 
-        'main:docs', 
-        'main:htaccess', 
-        'main:favicons', 
+        'main:htaccess',
         'main:createFiles'
       ),
       'report'
