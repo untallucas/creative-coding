@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "p5": "^1.4.0",
+    "p5.pattern": "SYM380/p5.pattern"
+  }
+}
