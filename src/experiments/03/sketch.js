@@ -5,17 +5,17 @@ let canvasPaddingV = 100
 let artboardSizeH = canvasSizeH - canvasPaddingH * 2
 let artboardSizeV = canvasSizeV - canvasPaddingV * 2
 let gridSteps = 20
-let cellPadding = 4
+let cellPadding = 0
 let cellSizeH = artboardSizeH / gridSteps
 let cellSizeV = artboardSizeV / gridSteps
-let itemSizeH = artboardSizeH / gridSteps - cellPadding * 2
-let itemSizeV = artboardSizeV / gridSteps - cellPadding * 2
+let itemSizeH = (artboardSizeH - cellPadding * 2) / gridSteps
+let itemSizeV = (artboardSizeV - cellPadding * 2) / gridSteps
 let cellsCounter = 1
 let colsCounter = 1
 let rowsCounter = 1
 let lastRow = rowsCounter
 
-let showGrid = true
+let showGrid = false
 let showDebug = false
 
 function setup() {
@@ -53,15 +53,14 @@ function draw() {
 
       // ---------- START DRAW STUFF ----------
 
-      let fillColor = lerpColor(colorFront, colorBack, 1 / gridSteps * (rowsCounter - 1))
-      fill(fillColor)
-      noStroke()
-      rect(
-        xPos + cellPadding,
+      stroke(colorFront)
+      strokeWeight(itemSizeH / (gridSteps + 1) * rowsCounter)
+      strokeCap(SQUARE)
+      line(
+        xPos + itemSizeH / 2,
         yPos + cellPadding,
-        itemSizeH,
-        itemSizeV,
-        5
+        xPos + itemSizeH / 2,
+        yPos + itemSizeV - cellPadding
       )
 
       // ---------- END DRAW STUFF ----------

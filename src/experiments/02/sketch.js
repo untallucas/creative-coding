@@ -4,8 +4,8 @@ let canvasPaddingH = 100
 let canvasPaddingV = 100
 let artboardSizeH = canvasSizeH - canvasPaddingH * 2
 let artboardSizeV = canvasSizeV - canvasPaddingV * 2
-let gridSteps = 20
-let cellPadding = 4
+let gridSteps = 8
+let cellPadding = 0
 let cellSizeH = artboardSizeH / gridSteps
 let cellSizeV = artboardSizeV / gridSteps
 let itemSizeH = artboardSizeH / gridSteps - cellPadding * 2
@@ -55,13 +55,16 @@ function draw() {
 
       let fillColor = lerpColor(colorFront, colorBack, 1 / gridSteps * (rowsCounter - 1))
       fill(fillColor)
+      let angleStart = 90 * random([0,1,2,3,4])
       noStroke()
-      rect(
-        xPos + cellPadding,
-        yPos + cellPadding,
+      angleMode(DEGREES)
+      arc(
+        xPos + cellSizeH / 2,
+        yPos + cellSizeV / 2,
         itemSizeH,
         itemSizeV,
-        5
+        angleStart,
+        angleStart + 90 * random([0,1,2,3,4])
       )
 
       // ---------- END DRAW STUFF ----------
