@@ -5,11 +5,11 @@ let canvasPaddingV = 100
 let artboardSizeH = canvasSizeH - canvasPaddingH * 2
 let artboardSizeV = canvasSizeV - canvasPaddingV * 2
 let gridSteps = 10
-let cellPadding = 0
+let cellPadding = 10
 let cellSizeH = artboardSizeH / gridSteps
 let cellSizeV = artboardSizeV / gridSteps
-let itemSizeH = (artboardSizeH - cellPadding * 2) / gridSteps
-let itemSizeV = (artboardSizeV - cellPadding * 2) / gridSteps
+let itemSizeH = cellSizeH - cellPadding * 2
+let itemSizeV = cellSizeV - cellPadding * 2
 let cellsCounter = 1
 let colsCounter = 1
 let rowsCounter = 1
@@ -18,7 +18,7 @@ let lastRow = rowsCounter
 let colorBack = 'white'
 let colorFront = 'black'
 
-let showGrid = false
+let showGrid = true
 let showDebug = false
 
 function setup() {
@@ -26,6 +26,9 @@ function setup() {
   frameRate(1)
   createCanvas(canvasSizeH, canvasSizeV)
   colorMode(RGB)
+  angleMode(DEGREES)
+  rectMode(CENTER)
+  ellipseMode(CENTER)
   noLoop()
 }
 
@@ -44,10 +47,11 @@ function draw() {
     for (let j = artboardSizeV / gridSteps + canvasPaddingV; j < artboardSizeV + canvasPaddingV; j += artboardSizeV / gridSteps) {
       line(canvasPaddingH,j,artboardSizeH + canvasPaddingH,j)
     }
+    noStroke()
   }
 
-  for (let yPos = canvasPaddingV; yPos < artboardSizeV + canvasPaddingV; yPos += cellSizeV) {
-    for (let xPos = canvasPaddingH; xPos < artboardSizeH + canvasPaddingH; xPos += cellSizeH) {
+  for (let yPos = canvasPaddingV + cellSizeH / 2; yPos < artboardSizeV + canvasPaddingV; yPos += cellSizeV) {
+    for (let xPos = canvasPaddingH + cellSizeH / 2; xPos < artboardSizeH + canvasPaddingH; xPos += cellSizeH) {
       // COUNTER ADV
       if(rowsCounter != lastRow){
         colsCounter = 1
@@ -56,14 +60,26 @@ function draw() {
 
       // ---------- START DRAW STUFF ----------
 
-      let fillColor = lerpColor(colorFront, colorBack, 1 / gridSteps * (rowsCounter - 1))
-      let shape = integrerRandom(0,31)
-      // let shape2 = integrerRandom(0,30)
+      // DEBUG
+      // blendMode(MULTIPLY)
+      // fill('yellow')
+      // rect(canvasSizeH / 2, canvasSizeV / 2, artboardSizeH, artboardSizeV)
 
-      blendMode(BLEND)
+
+      let shape = integrerRandom(0,19)
+      // shape = 'test'
+
+      let fillColor = lerpColor(colorFront, colorBack, 1 / gridSteps * (rowsCounter - 1))
       fill(fillColor)
-      noStroke()
-      drawShape(shape, xPos, yPos)
+
+      push()
+        translate(xPos, yPos)
+        rotate(integrerRandom(0,4) * 90)
+        drawShape(shape, 0, 0)
+        // stroke('red')
+        // strokeWeight(5)
+        // point(0,0)
+      pop()
 
       // blendMode(MULTIPLY)
       // noFill()
@@ -75,7 +91,7 @@ function draw() {
       // DEBUG
       if(showDebug){
         noStroke()
-        textSize(15)
+        textSize(12)
         fill('black')
         text('CELL ' + cellsCounter, xPos, yPos + 15);
         text('ROW ' + rowsCounter, xPos, yPos + 30);
@@ -99,94 +115,22 @@ function integrerRandom(min, max) {
 
 // DRAW SHAPES
 function drawShape(shape, xPos, yPos){
+  console.log(itemSizeV)
   switch(shape){
     default:
     break
 
-    // TRIANGLE LEFT BOTTOM
-    case 1:
-      triangle(
-        xPos,
-        yPos,
-        xPos + itemSizeH,
-        yPos + itemSizeV,
-        xPos,
-        yPos + itemSizeH
-      )
-    break
-
-    // TRIANGLE RIGHT BOTTOM
-    case 2:
-      triangle(
-        xPos + itemSizeH,
-        yPos,
-        xPos + itemSizeH,
-        yPos + itemSizeV,
-        xPos,
-        yPos + itemSizeH
-      )
-    break
-
-    // TRIANGLE LEFT TOP
-    case 3:
-      triangle(
-        xPos,
-        yPos,
-        xPos + itemSizeH,
-        yPos,
-        xPos,
-        yPos + itemSizeH
-      )
-    break
-
-    // TRIANGLE RIGHT TOP
-    case 4:
-      triangle(
-        xPos,
-        yPos,
-        xPos + itemSizeH,
-        yPos,
-        xPos + itemSizeH,
-        yPos + itemSizeH
-      )
-    break
-
-    // DIAMOND
-    case 5:
-      beginShape()
-        vertex(xPos + itemSizeH / 2, yPos)
-        vertex(xPos + itemSizeH, yPos + itemSizeV / 2)
-        vertex(xPos + itemSizeH / 2, yPos + itemSizeV)
-        vertex(xPos, yPos + itemSizeV / 2)
-      endShape(CLOSE)
-    break
-
     // CIRCLE
-    case 6:
+    case 1:
       circle(
-        xPos + itemSizeH / 2,
-        yPos + itemSizeV / 2,
+        xPos,
+        yPos,
         itemSizeH
-      )
-    break
-
-    // DONUT
-    case 7:
-      circle(
-        xPos + itemSizeH / 2,
-        yPos + itemSizeV / 2,
-        itemSizeH
-      )
-      fill(colorBack)
-      circle(
-        xPos + itemSizeH / 2,
-        yPos + itemSizeV / 2,
-        itemSizeH / 2
       )
     break
 
     // SQUARE
-    case 8:
+    case 2:
       rect(
         xPos,
         yPos,
@@ -195,345 +139,244 @@ function drawShape(shape, xPos, yPos){
       )
     break
 
-    // ARC LEFT BOTTOM
-    case 9:
-      arc(
-        xPos,
-        yPos + itemSizeV,
-        itemSizeH * 2,
-        itemSizeV * 2,
-        PI + HALF_PI,
-        0,
-        PIE
-      )
+    // DIAMOND
+    case 3:
+      beginShape()
+        vertex(xPos, yPos - itemSizeV / 2)
+        vertex(xPos + itemSizeH / 2, yPos)
+        vertex(xPos, yPos + itemSizeV / 2)
+        vertex(xPos - itemSizeH / 2, yPos)
+      endShape(CLOSE)
     break
 
-    // ARC RIGHT BOTTOM
-    case 10:
-      arc(
-        xPos + itemSizeH,
-        yPos + itemSizeV,
-        itemSizeH * 2,
-        itemSizeV * 2,
-        PI,
-        PI + HALF_PI,
-        PIE
-      )
-    break
-
-    // ARC LEFT TOP
-    case 11:
-      arc(
-        xPos,
-        yPos,
-        itemSizeH * 2,
-        itemSizeV * 2,
-        0,
-        HALF_PI,
-        PIE
-      )
-    break
-
-    // ARC RIGHT TOP
-    case 12:
-      arc(
-        xPos + itemSizeH,
-        yPos,
-        itemSizeH * 2,
-        itemSizeV * 2,
-        HALF_PI,
-        PI,
-        PIE
-      )
-    break
-
-    // DONUT ARC LEFT BOTTOM
-    case 13:
-      arc(
-        xPos,
-        yPos + itemSizeV,
-        itemSizeH * 2,
-        itemSizeV * 2,
-        PI + HALF_PI,
-        0,
-        PIE
-      )
-      fill(colorBack)
-      arc(
-        xPos,
-        yPos + itemSizeV,
-        itemSizeH,
-        itemSizeV,
-        PI + HALF_PI,
-        0,
-        PIE
-      )
-    break
-
-    // DONUT ARC RIGHT BOTTOM
-    case 14:
-      arc(
-        xPos + itemSizeH,
-        yPos + itemSizeV,
-        itemSizeH * 2,
-        itemSizeV * 2,
-        PI,
-        PI + HALF_PI,
-        PIE
-      )
-      fill(colorBack)
-      arc(
-        xPos + itemSizeH,
-        yPos + itemSizeV,
-        itemSizeH,
-        itemSizeV,
-        PI,
-        PI + HALF_PI,
-        PIE
-      )
-    break
-
-    // DONUT ARC LEFT TOP
-    case 15:
-      arc(
-        xPos,
-        yPos,
-        itemSizeH * 2,
-        itemSizeV * 2,
-        0,
-        HALF_PI,
-        PIE
-      )
-      fill(colorBack)
-      arc(
-        xPos,
-        yPos,
-        itemSizeH,
-        itemSizeV,
-        0,
-        HALF_PI,
-        PIE
-      )
-    break
-
-    // DONUT ARC RIGHT TOP
-    case 16:
-      arc(
-        xPos + itemSizeH,
-        yPos,
-        itemSizeH * 2,
-        itemSizeV * 2,
-        HALF_PI,
-        PI,
-        PIE
-      )
-      fill(colorBack)
-      arc(
-        xPos + itemSizeH,
-        yPos,
-        itemSizeH,
-        itemSizeV,
-        HALF_PI,
-        PI,
-        PIE
-      )
-    break
-
-    // HALF CIRCLE BOTTOM
-    case 17:
-      arc(
-        xPos + itemSizeH / 2,
-        yPos + itemSizeV / 2,
-        itemSizeH,
-        itemSizeV,
-        0,
-        PI,
-        PIE
-      )
-    break
-
-    // HALF CIRCLE TOP
-    case 18:
-      arc(
-        xPos + itemSizeH / 2,
-        yPos + itemSizeV / 2,
-        itemSizeH,
-        itemSizeV,
-        PI,
-        0,
-        PIE
-      )
-    break
-
-    // HALF CIRCLE LEFT
-    case 19:
-      arc(
-        xPos + itemSizeH / 2,
-        yPos + itemSizeV / 2,
-        itemSizeH,
-        itemSizeV,
-        HALF_PI,
-        HALF_PI + PI,
-        PIE
-      )
-    break    
-
-    // HALF CIRCLE RIGHT
-    case 20:
-      arc(
-        xPos + itemSizeH / 2,
-        yPos + itemSizeV / 2,
-        itemSizeH,
-        itemSizeV,
-        HALF_PI + PI,
-        HALF_PI,
-        PIE
-      )
-    break
-
-    // HALF CIRCLE BOTTOM DISPLACED
-    case 21:
-      arc(
-        xPos + itemSizeH / 2,
-        yPos,
-        itemSizeH,
-        itemSizeV,
-        0,
-        PI,
-        PIE
-      )
-    break
-
-    // HALF CIRCLE TOP DISPLACED
-    case 22:
-      arc(
-        xPos + itemSizeH / 2,
-        yPos + itemSizeV,
-        itemSizeH,
-        itemSizeV,
-        PI,
-        0,
-        PIE
-      )
-    break
-
-    // HALF CIRCLE LEFT DISPLACED
-    case 23:
-      arc(
-        xPos + itemSizeH,
-        yPos + itemSizeV / 2,
-        itemSizeH,
-        itemSizeV,
-        HALF_PI,
-        HALF_PI + PI,
-        PIE
-      )
-    break    
-
-    // HALF CIRCLE RIGHT DISPLACED
-    case 24:
-      arc(
-        xPos,
-        yPos + itemSizeV / 2,
-        itemSizeH,
-        itemSizeV,
-        HALF_PI + PI,
-        HALF_PI,
-        PIE
-      )
-    break
-    
-    // SMALL CIRCLE
-    case 25:
+    // DONUT
+    case 4:
       circle(
-        xPos + itemSizeH / 2,
-        yPos + itemSizeV / 2,
+        xPos,
+        yPos,
+        itemSizeH
+      )
+      fill(colorBack)
+      circle(
+        xPos,
+        yPos,
         itemSizeH / 2
       )
     break
 
-    // HOURGLASS
-    case 26:
+    // TRIANGLE
+    case 5:
       triangle(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
         xPos + itemSizeH / 2,
         yPos + itemSizeV / 2,
-        xPos,
-        yPos,
-        xPos + itemSizeH,
-        yPos
-      )
-      triangle(
-        xPos + itemSizeH / 2,
-        yPos + itemSizeV / 2,
-        xPos + itemSizeH,
-        yPos + itemSizeV,
-        xPos,
-        yPos + itemSizeV
+        xPos - itemSizeH / 2,
+        yPos + itemSizeH / 2
       )
     break
 
-    // RECTANGLE TOP
-    case 27:
+    // ARC
+    case 6:
+      arc(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        itemSizeH * 2,
+        itemSizeV * 2,
+        0,
+        90,
+        PIE
+      )
+    break
+
+    // QUARTER DONUT
+    case 7:
+      arc(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        itemSizeH * 2,
+        itemSizeV * 2,
+        0,
+        90,
+        PIE
+      )
+      fill(colorBack)
+      arc(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+    break
+
+    // HALF CIRCLE DISPLACED
+    case 8:
+      arc(
+        xPos,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        0,
+        180,
+        PIE
+      )
+    break
+
+    // HALF CIRCLE
+    case 9:
+      arc(
+        xPos,
+        yPos,
+        itemSizeH,
+        itemSizeV,
+        0,
+        180,
+        PIE
+      )
+    break
+
+    // SMALL CIRCLE
+    case 10:
+      circle(
+        xPos,
+        yPos,
+        itemSizeH / 2
+      )
+    break
+
+    // SMALL SQUARE
+    case 11:
       rect(
         xPos,
         yPos,
+        itemSizeH / 2
+      )
+    break
+
+    // HALF RECTANGLE
+    case 12:
+      rect(
+        xPos,
+        yPos - itemSizeV / 4,
         itemSizeH,
         itemSizeV / 2
       )
     break
 
-    // RECTANGLE BOTTOM
-    case 28:
+    // TWO SQUARES
+    case 13:
       rect(
-        xPos,
-        yPos + itemSizeV / 2,
-        itemSizeH,
+        xPos - itemSizeH / 4,
+        yPos - itemSizeV / 4,
+        itemSizeH / 2,
+        itemSizeV / 2
+      )
+      rect(
+        xPos + itemSizeH / 4,
+        yPos + itemSizeV / 4,
+        itemSizeH / 2,
         itemSizeV / 2
       )
     break
 
-    // RECTANGLE LEFT
-    case 29:
+    // THREE SQUARES
+    case 14:
       rect(
-        xPos,
+        xPos - itemSizeH / 4,
         yPos,
         itemSizeH / 2,
         itemSizeV
       )
+      rect(
+        xPos + itemSizeH / 4,
+        yPos + itemSizeV / 4,
+        itemSizeH / 2,
+        itemSizeV / 2
+      )
     break
 
-    // RECTANGLE RIGHT
-    case 30:
-      rect(
-        xPos + itemSizeH / 2,
-        yPos,
-        itemSizeH / 2,
-        itemSizeV
+    // TWO CIRCLES
+    case 15:
+      circle(
+        xPos - itemSizeH / 4,
+        yPos - itemSizeV / 4,
+        itemSizeH / 2
+      )
+      circle(
+        xPos + itemSizeH / 4,
+        yPos + itemSizeV / 4,
+        itemSizeH / 2
+      )
+    break
+
+    // TWO CIRCLES
+    case 16:
+      circle(
+        xPos - itemSizeH / 4,
+        yPos - itemSizeV / 4,
+        itemSizeH / 2
+      )
+      circle(
+        xPos - itemSizeH / 4,
+        yPos + itemSizeV / 4,
+        itemSizeH / 2
+      )
+    break
+
+    // THREE CIRCLES
+    case 17:
+      circle(
+        xPos - itemSizeH / 4,
+        yPos - itemSizeV / 4,
+        itemSizeH / 2
+      )
+      circle(
+        xPos - itemSizeH / 4,
+        yPos + itemSizeV / 4,
+        itemSizeH / 2
+      )
+      circle(
+        xPos + itemSizeH / 4,
+        yPos + itemSizeV / 4,
+        itemSizeH / 2
       )
     break
 
     // FOUR CIRCLES
-    case 31:
+    case 18:
+      circle(
+        xPos - itemSizeH / 4,
+        yPos - itemSizeV / 4,
+        itemSizeH / 2
+      )
+      circle(
+        xPos - itemSizeH / 4,
+        yPos + itemSizeV / 4,
+        itemSizeH / 2
+      )
       circle(
         xPos + itemSizeH / 4,
         yPos + itemSizeV / 4,
         itemSizeH / 2
       )
       circle(
-        xPos + itemSizeH / 4 * 3,
-        yPos + itemSizeV / 4,
-        itemSizeH / 2
-      )
-      circle(
-        xPos + itemSizeH / 4 * 3,
-        yPos + itemSizeV / 4 * 3,
-        itemSizeH / 2
-      )
-      circle(
         xPos + itemSizeH / 4,
-        yPos + itemSizeV / 4 * 3,
+        yPos - itemSizeV / 4,
         itemSizeH / 2
       )
+    break
+    
+    // HOURGLASS
+    case 19:
+      beginShape()
+        vertex(xPos - itemSizeH / 2, yPos - itemSizeV / 2)
+        vertex(xPos + itemSizeH / 2, yPos - itemSizeV / 2)
+        vertex(xPos - itemSizeH / 2, yPos + itemSizeV / 2)
+        vertex(xPos + itemSizeH / 2, yPos + itemSizeV / 2)
+      endShape(CLOSE)
     break
 
     // 3/4 PIES
@@ -543,6 +386,5 @@ function drawShape(shape, xPos, yPos){
     // 2 SQUARES VARS
     // HALF CIRCLE DIAGONAL
     // QUARTER CIRCLES
-    // 
   }
 }
