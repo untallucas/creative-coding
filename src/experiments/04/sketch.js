@@ -57,8 +57,8 @@ function draw() {
       // ---------- START DRAW STUFF ----------
 
       let fillColor = lerpColor(colorFront, colorBack, 1 / gridSteps * (rowsCounter - 1))
-      let shape = integrerRandom(0,30)
-      let shape2 = integrerRandom(0,30)
+      let shape = integrerRandom(0,31)
+      // let shape2 = integrerRandom(0,30)
 
       blendMode(BLEND)
       fill(fillColor)
@@ -512,7 +512,30 @@ function drawShape(shape, xPos, yPos){
       )
     break
 
-    // 4 CIRCLES
+    // FOUR CIRCLES
+    case 31:
+      circle(
+        xPos + itemSizeH / 4,
+        yPos + itemSizeV / 4,
+        itemSizeH / 2
+      )
+      circle(
+        xPos + itemSizeH / 4 * 3,
+        yPos + itemSizeV / 4,
+        itemSizeH / 2
+      )
+      circle(
+        xPos + itemSizeH / 4 * 3,
+        yPos + itemSizeV / 4 * 3,
+        itemSizeH / 2
+      )
+      circle(
+        xPos + itemSizeH / 4,
+        yPos + itemSizeV / 4 * 3,
+        itemSizeH / 2
+      )
+    break
+
     // 3/4 PIES
     // QUARTER ARCS
     // SQUARED ARCS

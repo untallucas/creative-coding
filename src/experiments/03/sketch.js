@@ -54,7 +54,7 @@ function draw() {
       // ---------- START DRAW STUFF ----------
 
       stroke(colorFront)
-      strokeWeight(itemSizeH / (gridSteps + 1) * rowsCounter)
+      strokeWeight(itemSizeH / gridSteps * colsCounter)
       strokeCap(SQUARE)
       line(
         xPos + itemSizeH / 2,
