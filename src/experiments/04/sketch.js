@@ -5,7 +5,7 @@ let canvasPaddingV = 100
 let artboardSizeH = canvasSizeH - canvasPaddingH * 2
 let artboardSizeV = canvasSizeV - canvasPaddingV * 2
 let gridSteps = 10
-let cellPadding = 10
+let cellPadding = 0
 let cellSizeH = artboardSizeH / gridSteps
 let cellSizeV = artboardSizeV / gridSteps
 let itemSizeH = cellSizeH - cellPadding * 2
@@ -18,7 +18,7 @@ let lastRow = rowsCounter
 let colorBack = 'white'
 let colorFront = 'black'
 
-let showGrid = true
+let showGrid = false
 let showDebug = false
 
 function setup() {
@@ -47,7 +47,6 @@ function draw() {
     for (let j = artboardSizeV / gridSteps + canvasPaddingV; j < artboardSizeV + canvasPaddingV; j += artboardSizeV / gridSteps) {
       line(canvasPaddingH,j,artboardSizeH + canvasPaddingH,j)
     }
-    noStroke()
   }
 
   for (let yPos = canvasPaddingV + cellSizeH / 2; yPos < artboardSizeV + canvasPaddingV; yPos += cellSizeV) {
@@ -60,31 +59,18 @@ function draw() {
 
       // ---------- START DRAW STUFF ----------
 
-      // DEBUG
-      // blendMode(MULTIPLY)
-      // fill('yellow')
-      // rect(canvasSizeH / 2, canvasSizeV / 2, artboardSizeH, artboardSizeV)
-
-
-      let shape = integrerRandom(0,19)
-      // shape = 'test'
-
       let fillColor = lerpColor(colorFront, colorBack, 1 / gridSteps * (rowsCounter - 1))
-      fill(fillColor)
+      noStroke()
+      let shapeRotate = integrerRandom(1,4) * 90
+      let shape = integrerRandom(0,30)
 
       push()
         translate(xPos, yPos)
-        rotate(integrerRandom(0,4) * 90)
+        rotate(shapeRotate)
+        blendMode(BLEND)
+        fill(fillColor)
         drawShape(shape, 0, 0)
-        // stroke('red')
-        // strokeWeight(5)
-        // point(0,0)
       pop()
-
-      // blendMode(MULTIPLY)
-      // noFill()
-      // stroke(200)
-      // drawShape(shape2, xPos, yPos)
 
       // ---------- END DRAW STUFF ----------
 
@@ -369,7 +355,7 @@ function drawShape(shape, xPos, yPos){
     break
     
     // HOURGLASS
-    case 19:
+    case '19':
       beginShape()
         vertex(xPos - itemSizeH / 2, yPos - itemSizeV / 2)
         vertex(xPos + itemSizeH / 2, yPos - itemSizeV / 2)
@@ -378,12 +364,291 @@ function drawShape(shape, xPos, yPos){
       endShape(CLOSE)
     break
 
-    // 3/4 PIES
-    // QUARTER ARCS
-    // SQUARED ARCS
-    // 4 TRIANGLES VARS
-    // 2 SQUARES VARS
-    // HALF CIRCLE DIAGONAL
-    // QUARTER CIRCLES
+    // 3/4 CIRCLE
+    case 20:
+      arc(
+        xPos,
+        yPos,
+        itemSizeH,
+        itemSizeV,
+        0,
+        270,
+        PIE
+      )
+    break
+
+    // QUARTER CIRCLE
+    case 21:
+      arc(
+        xPos,
+        yPos,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+    break
+
+    // QUARTER CIRCLE CORNERS
+    case 22:
+      arc(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+      arc(
+        xPos - itemSizeH / 2,
+        yPos + itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        270,
+        360,
+        PIE
+      )
+      arc(
+        xPos + itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        90,
+        180,
+        PIE
+      )
+      arc(
+        xPos + itemSizeH / 2,
+        yPos + itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        180,
+        270,
+        PIE
+      )
+    break
+
+    // 3 QUARTER CIRCLE CORNER
+    case 23:
+      arc(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+      arc(
+        xPos - itemSizeH / 2,
+        yPos + itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        270,
+        360,
+        PIE
+      )
+      arc(
+        xPos + itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        90,
+        180,
+        PIE
+      )
+    break
+
+    // 2 QUARTER CIRCLE CORNERS
+    case 24:
+      arc(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+      arc(
+        xPos - itemSizeH / 2,
+        yPos + itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        270,
+        360,
+        PIE
+      )
+    break
+
+    // 4 QUARTER CIRCLES
+    case 25:
+      arc(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+      arc(
+        xPos,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+      arc(
+        xPos - itemSizeH / 2,
+        yPos,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+      arc(
+        xPos,
+        yPos,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+    break
+
+    // 3 QUARTER CIRCLES
+    case 26:
+      arc(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+      arc(
+        xPos,
+        yPos - itemSizeV / 2,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+      arc(
+        xPos - itemSizeH / 2,
+        yPos,
+        itemSizeH,
+        itemSizeV,
+        0,
+        90,
+        PIE
+      )
+    break
+
+    // 2 TRIANGLES SMALL
+    case 27:
+      triangle(
+        xPos - itemSizeH / 2,
+        yPos,
+        xPos,
+        yPos + itemSizeV / 2,
+        xPos - itemSizeH / 2,
+        yPos + itemSizeH / 2
+      )
+      triangle(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        xPos,
+        yPos,
+        xPos - itemSizeH / 2,
+        yPos
+      )
+    break
+
+    // 3 TRIANGLES SMALL
+    case 28:
+      triangle(
+        xPos - itemSizeH / 2,
+        yPos,
+        xPos,
+        yPos + itemSizeV / 2,
+        xPos - itemSizeH / 2,
+        yPos + itemSizeH / 2
+      )
+      triangle(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        xPos,
+        yPos,
+        xPos - itemSizeH / 2,
+        yPos
+      )
+      triangle(
+        xPos,
+        yPos - itemSizeV / 2,
+        xPos + itemSizeH / 2,
+        yPos,
+        xPos,
+        yPos,
+      )
+    break
+
+    // 4 TRIANGLES SMALL
+    case 29:
+      triangle(
+        xPos - itemSizeH / 2,
+        yPos,
+        xPos,
+        yPos + itemSizeV / 2,
+        xPos - itemSizeH / 2,
+        yPos + itemSizeH / 2
+      )
+      triangle(
+        xPos - itemSizeH / 2,
+        yPos - itemSizeV / 2,
+        xPos,
+        yPos,
+        xPos - itemSizeH / 2,
+        yPos
+      )
+      triangle(
+        xPos,
+        yPos - itemSizeV / 2,
+        xPos + itemSizeH / 2,
+        yPos,
+        xPos,
+        yPos,
+      )
+      triangle(
+        xPos,
+        yPos,
+        xPos + itemSizeH / 2,
+        yPos + itemSizeV / 2,
+        xPos,
+        yPos + itemSizeV / 2
+      )
+    break
+
+    // HALF CIRCLE SLANTED
+    case 30:
+      arc(
+        xPos,
+        yPos,
+        itemSizeH,
+        itemSizeV,
+        -45,
+        135,
+        PIE
+      )
+    break
   }
 }
