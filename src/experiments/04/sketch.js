@@ -115,7 +115,6 @@ function integrerRandom(min, max) {
 
 // DRAW SHAPES
 function drawShape(shape, xPos, yPos){
-  console.log(itemSizeV)
   switch(shape){
     default:
     break
