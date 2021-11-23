@@ -4,7 +4,7 @@ let canvasPaddingH = 100
 let canvasPaddingV = 100
 let artboardSizeH = canvasSizeH - canvasPaddingH * 2
 let artboardSizeV = canvasSizeV - canvasPaddingV * 2
-let gridSteps = 20
+let gridSteps = 10
 let cellPadding = 0
 let cellSizeH = artboardSizeH / gridSteps
 let cellSizeV = artboardSizeV / gridSteps
@@ -68,6 +68,66 @@ function draw() {
       push()
         translate(xPos, yPos)
         rotate(shapeRotate)
+        strokeCap(SQUARE)
+
+        stroke(lerpColor(colorFront, colorBack, 1 / 4 * 3))
+        strokeWeight(4+10+12+14)
+        arc(
+          -itemSizeH / 2,
+          -itemSizeV / 2,
+          itemSizeH,
+          itemSizeV,
+          0,
+          90
+        )
+        arc(
+          itemSizeH / 2,
+          itemSizeV / 2,
+          itemSizeH,
+          itemSizeV,
+          180,
+          270
+        )
+
+        stroke(lerpColor(colorFront, colorBack, 1 / 4 * 2))
+        strokeWeight(4+10+12)
+        arc(
+          -itemSizeH / 2,
+          -itemSizeV / 2,
+          itemSizeH,
+          itemSizeV,
+          0,
+          90
+        )
+        arc(
+          itemSizeH / 2,
+          itemSizeV / 2,
+          itemSizeH,
+          itemSizeV,
+          180,
+          270
+        )
+
+        stroke(lerpColor(colorFront, colorBack, 1 / 4 * 1))
+        strokeWeight(4+10)
+        arc(
+          -itemSizeH / 2,
+          -itemSizeV / 2,
+          itemSizeH,
+          itemSizeV,
+          0,
+          90
+        )
+        arc(
+          itemSizeH / 2,
+          itemSizeV / 2,
+          itemSizeH,
+          itemSizeV,
+          180,
+          270
+        )
+
+        stroke(lerpColor(colorFront, colorBack, 1 / 4 * 0))
         strokeWeight(4)
         arc(
           -itemSizeH / 2,
@@ -82,39 +142,6 @@ function draw() {
           itemSizeV / 2,
           itemSizeH,
           itemSizeV,
-          180,
-          270
-        )
-        strokeWeight(1)
-        arc(
-          -itemSizeH / 2,
-          -itemSizeV / 2,
-          itemSizeH - itemSizeH / 5,
-          itemSizeV - itemSizeV / 5,
-          0,
-          90
-        )
-        arc(
-          itemSizeH / 2,
-          itemSizeV / 2,
-          itemSizeH - itemSizeH / 5,
-          itemSizeV - itemSizeV / 5,
-          180,
-          270
-        )
-        arc(
-          -itemSizeH / 2,
-          -itemSizeV / 2,
-          itemSizeH + itemSizeH / 5,
-          itemSizeV + itemSizeV / 5,
-          0,
-          90
-        )
-        arc(
-          itemSizeH / 2,
-          itemSizeV / 2,
-          itemSizeH + itemSizeH / 5,
-          itemSizeV + itemSizeV / 5,
           180,
           270
         )
