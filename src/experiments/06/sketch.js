@@ -4,13 +4,13 @@ let canvasPaddingH = 100
 let canvasPaddingV = 100
 let artboardSizeH = canvasSizeH - canvasPaddingH * 2
 let artboardSizeV = canvasSizeV - canvasPaddingV * 2
-let gridSteps = 15
+let gridSteps = 50
 let cellPadding = 0
 let cellSizeH = artboardSizeH / gridSteps
 let cellSizeV = artboardSizeV / gridSteps
 let itemSizeH = cellSizeH - cellPadding * 2
 let itemSizeV = cellSizeV - cellPadding * 2
-let cellsCounter = 0
+let cellsCounter = 1
 let colsCounter = 1
 let rowsCounter = 1
 let lastRow = rowsCounter
@@ -19,6 +19,7 @@ let colorBack = 'white'
 let colorFront = 'black'
 
 let showGrid = false
+let showDebug = false
 
 function setup() {
   pixelDensity(2.0)
@@ -48,12 +49,6 @@ function draw() {
     }
   }
 
-  blendMode(BLEND)
-  noFill()
-  stroke(colorFront)
-
-  let shapeBorders = []
-
   for (let yPos = canvasPaddingV + cellSizeH / 2; yPos < artboardSizeV + canvasPaddingV; yPos += cellSizeV) {
     for (let xPos = canvasPaddingH + cellSizeH / 2; xPos < artboardSizeH + canvasPaddingH; xPos += cellSizeH) {
       // COUNTER ADV
@@ -62,113 +57,39 @@ function draw() {
         lastRow = rowsCounter
       }
 
-      let leftBorder = false
-      let topBorder = false
+      // ---------- START DRAW STUFF ----------
 
-      if(cellsCounter != 0 && colsCounter != 1 && shapeBorders[cellsCounter - 1][0]){
-        leftBorder = true
+      let shapeRotate = integrerRandom(0,1) * 90
+
+      push()
+        translate(xPos, yPos)
+        rotate(shapeRotate)
+        strokeCap(ROUND)
+        strokeJoin(ROUND)
+
+        stroke(colorFront)
+        strokeWeight(4)
+        beginShape()
+          vertex(0, -itemSizeV / 2)
+          vertex(-itemSizeH / 2, 0)
+        endShape(CLOSE)
+        beginShape()
+          vertex(0, itemSizeV / 2)
+          vertex(itemSizeH / 2, 0)
+        endShape(CLOSE)
+      pop()
+
+      // ---------- END DRAW STUFF ----------
+
+      // DEBUG
+      if(showDebug){
+        noStroke()
+        textSize(12)
+        fill('black')
+        text('CELL ' + cellsCounter, xPos, yPos + 15);
+        text('ROW ' + rowsCounter, xPos, yPos + 30);
+        text('COL ' + colsCounter, xPos, yPos + 45);
       }
-
-      if(typeof shapeBorders[cellsCounter - gridSteps] != 'undefined') {
-        if(shapeBorders[cellsCounter - gridSteps][1]){
-          topBorder = true
-        }
-      }
-
-      let shapeOptions = []
-      if(topBorder && !leftBorder){
-        // ◥
-        shapeOptions = [3]
-      }
-      if(topBorder && leftBorder){
-        // ◤ ◼️
-        shapeOptions = [1,2]
-      }
-      if(leftBorder && !topBorder){
-        // ◣
-        shapeOptions = [5]
-      }
-      if(!topBorder && !leftBorder){
-        // ◢ x
-        shapeOptions = [0,4]
-      }
-
-      let shape = random(shapeOptions)
-      let rightBorder = false
-      let bottomBorder = false
-
-      noStroke()
-      fill(colorFront)
-      switch(shape){
-        case 0:
-        break
-
-        case 1:
-          // 1 ◼️
-          rect(
-            xPos,
-            yPos,
-            itemSizeH,
-            itemSizeV
-          )
-          rightBorder = true
-          bottomBorder = true
-        break
-
-        case 2:
-          // 2 ◤
-          triangle(
-            xPos - itemSizeH / 2,
-            yPos - itemSizeV / 2,
-            xPos + itemSizeH / 2,
-            yPos - itemSizeV / 2,
-            xPos - itemSizeH / 2,
-            yPos + itemSizeH / 2
-          )
-        break
-
-        case 3:
-          // 3 ◥
-          triangle(
-            xPos - itemSizeH / 2,
-            yPos - itemSizeV / 2,
-            xPos + itemSizeH / 2,
-            yPos - itemSizeV / 2,
-            xPos + itemSizeH / 2,
-            yPos + itemSizeH / 2
-          )
-          rightBorder = true
-        break
-
-        case 4:
-          // 4 ◢
-          triangle(
-            xPos + itemSizeH / 2,
-            yPos - itemSizeV / 2,
-            xPos + itemSizeH / 2,
-            yPos + itemSizeH / 2,
-            xPos - itemSizeH / 2,
-            yPos + itemSizeV / 2
-          )
-          rightBorder = true
-          bottomBorder = true
-        break
-
-        case 5:
-          // 5 ◣
-          triangle(
-            xPos + itemSizeH / 2,
-            yPos + itemSizeH / 2,
-            xPos - itemSizeH / 2,
-            yPos + itemSizeV / 2,
-            xPos - itemSizeH / 2,
-            yPos - itemSizeV / 2
-          )
-          bottomBorder = true
-        break
-      }
-
-      shapeBorders.push([rightBorder, bottomBorder])
 
       // COUNTER ADV
       ++colsCounter
