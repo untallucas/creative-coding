@@ -8,15 +8,6 @@ let drawBackground = true
 let drawNoise = true
 let drawClouds = true
 
-const balloonPatterns = [
-  PTN.wave(50, 10, 20, 10),
-  PTN.checked(10, 20),
-  PTN.wave(200, 30, 60, 40),
-  PTN.checked(180, 60),
-  PTN.wave(600, 50, 180, 100),
-  PTN.checked(80, 80),
-]
-
 
 // TRAITS AND SCENE VARIATIONS
 let balloonColorsHue = integrerRandom(0, 360)
