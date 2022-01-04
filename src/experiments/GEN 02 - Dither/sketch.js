@@ -15,9 +15,9 @@ let nimbusSizeList = []
 let nimbusXList = []
 let nimbusYList = []
 for(let i = 0; i < 20; i++){
-  nimbusSizeList.push(integrerRandom(3,5) * canvasSizeH / 10)
+  nimbusSizeList.push(integrerRandom(2,4) * canvasSizeH / 10)
   nimbusXList.push(integrerRandom(-2,12) * canvasSizeH / 10)
-  nimbusYList.push(integrerRandom(9,11) * canvasSizeV / 10)
+  nimbusYList.push(integrerRandom(2,8) * canvasSizeV / 10)
 }
 
 
@@ -113,6 +113,9 @@ function draw() {
     }
   }
 
+  // blendMode(MULTIPLY)
+  // fill('purple')
+  // rect(0,0,canvasSizeH,canvasSizeV)
 
   // SKYLIGHT
   colorMode(RGB)
